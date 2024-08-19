@@ -1,0 +1,87 @@
+{
+    debug
+    servers :8122 {
+        name lp_http
+        protocols h1
+        log_credentials
+    }
+    servers :8123 {
+        name grpc
+        protocols h1 h2 h2c
+        log_credentials
+    }
+    log {
+        format json
+    }
+}
+
+:8122 {
+    log {
+        output stdout
+        format json
+    }
+    skip_log /
+    # skip_log /health-check
+    respond /health-check 200 {
+        body {"code":0,"msg":"SUCCESS1"}
+        close
+    }
+    # 通用错误处理路由
+    route /error/* {
+        respond {http.request.uri.path.1} `{"code":{path.1},"msg":"An error occurred"}` {
+            close
+        }
+    }
+    # API 路由
+    #handle /api/* {
+    handle /api/err/* {
+        # 这里是你的 API 处理逻辑
+        # 例如：reverse_proxy, file_server 等
+
+        # 如果没有匹配到具体的 API 路由，返回 404
+        respond 404 {
+            body `{
+                "code": 404,
+                "msg": "API not found in api err",
+                "path": "{uri}"
+            }`
+        }
+    }
+    respond * "This is an API endpoint"
+    handle_errors {
+        @404 expression {http.error.status_code} == 404
+        @500 expression {http.error.status_code} == 500
+#        respond @404 "404 - Page not found" 404 {
+#            close
+#        }
+        respond @404 404 {
+            body `{"code":404,"msg":"Not Found"}`
+            close
+        }
+        respond @500 500 {
+            body `{"code":500,"msg":"Internal Server Error"}`
+            close
+        }
+       # 默认错误处理
+       # rewrite * /error/{http.error.status_code}
+        respond 404 {
+            body `{
+                "code": {err.status_code},
+                "msg": "{err.message}",
+                "path": "{uri}"
+            }`
+        }
+    }
+    
+    # 处理所有其他请求
+    handle {
+        # 如果请求没有被前面的规则处理，则返回 404
+        respond 404 {
+            body `{"code":404,"msg":"API not found", "path": "{uri}"}`
+        }
+    }
+
+
+
+
+}
