@@ -80,8 +80,4 @@
             body `{"code":404,"msg":"API not found", "path": "{uri}"}`
         }
     }
-
-
-
-
 }
