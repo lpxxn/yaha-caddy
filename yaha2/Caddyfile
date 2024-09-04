@@ -1,0 +1,16 @@
+{
+  order helloworld last
+  order myhandler last
+}
+
+:8880 {
+    helloworld John
+
+     myhandler {
+        message world
+     }
+}
+
+#:8880 {
+#    myhandler "world"
+#}
