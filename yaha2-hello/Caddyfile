@@ -1,0 +1,11 @@
+{
+  order lroute last
+}
+
+:5550 {
+    lroute http ^/abc/api$ {
+        patch {
+            aaaa
+        }
+    }
+}

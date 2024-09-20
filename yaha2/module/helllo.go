@@ -55,6 +55,7 @@ func (h helloWorld) ServeHTTP(writer http.ResponseWriter, request *http.Request,
 	return handler.ServeHTTP(writer, request)
 }
 
+// -- 解析 caddy file
 func parseCaddyfile(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
 	handler := new(helloWorld)
 	handler.UnmarshalCaddyfile(h.Dispenser)
