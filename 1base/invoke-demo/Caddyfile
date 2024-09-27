@@ -1,0 +1,23 @@
+{
+    http_port 3080
+}
+&(app-proxy) {
+	reverse_proxy :5123 {
+		#lb_policy least_conn
+		#health_uri /healthz
+		#health_interval 5s
+	}
+}
+
+:5123 {
+	respond "I am 8080"
+}
+
+# The app is also accessible via a subdomain.
+http://app.example.com {
+	invoke app-proxy
+}
+
+http://app2.example.com {
+	invoke app-proxy
+}

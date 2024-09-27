@@ -1,6 +1,8 @@
 package module
 
 import (
+	"log"
+
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/caddyconfig/httpcaddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
@@ -22,10 +24,7 @@ func (h *LRoute) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 		if !d.NextArg() {
 			return d.ArgErr()
 		}
-		h.Name = d.Val()
-		//if !d.AllArgs(&h.Name) {
-		//	return d.ArgErr()
-		//}
+		log.Printf("val: %s", d.Val())
 	}
 	return nil
 }

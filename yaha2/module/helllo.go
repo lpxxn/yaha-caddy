@@ -50,6 +50,7 @@ func (h helloWorld) Validate() error {
 	}
 	return nil
 }
+
 func (h helloWorld) ServeHTTP(writer http.ResponseWriter, request *http.Request, handler caddyhttp.Handler) error {
 	fmt.Fprintf(writer, "Hello, %s!", h.Name)
 	return handler.ServeHTTP(writer, request)

@@ -1,0 +1,16 @@
+{
+    auto_https off
+}
+
+&(app-proxy) {
+	reverse_proxy :9123 {
+		#lb_policy least_conn
+		#health_uri /healthz
+		#health_interval 5s
+	}
+}
+
+# The app is also accessible via a subdomain.
+app.example.com {
+	invoke app-proxy
+}
